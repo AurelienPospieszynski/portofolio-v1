@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { CARD_STATE, getInitialMemory } from "../../lib/memory";
+import { CARD_STATE, getInitialMemory, isPairCards } from "../../lib/memory";
 
 const MemoryContext = createContext();
 
@@ -39,7 +39,35 @@ export const MemoryContextProvider = ({ children }) => {
         return c;
       })
     );
+
+    if (returnedCards.length === 0) {
+      return;
+    }
+    returnedCards.push(returnedCard);
+    computeReturnedCards(returnedCards);
   };
+
+  const computeReturnedCards = (returnedCards) => {
+    const isPair = isPairCards(returnedCards[0], returnedCards[1]);
+
+    setTimeout(
+      () => {
+        setCards((current) => {
+          return current.map((card) => {
+            if (
+              card.state === CARD_STATE.RETURNED &&
+              returnedCards.includes(card)
+            ) {
+              card.state = isPair ? CARD_STATE.FIND : CARD_STATE.HIDE;
+            }
+            return card;
+          });
+        });
+      },
+      isPair ? 100 : 1500
+    );
+  };
+
   const reset = () => {
     console.log("je reset");
     setCards(getInitialMemory());
