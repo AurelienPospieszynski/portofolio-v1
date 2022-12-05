@@ -26,7 +26,7 @@ export const HeroSection = () => {
             <i>I'm a software developer </i>
           </b>
           that make things on internet.<br></br>
-          I'm very happy to see your here.
+          I'm very happy to see you here.
           <b>
             <i> React oriented</i>{" "}
           </b>
