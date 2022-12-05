@@ -1,5 +1,10 @@
-import { createContext, useContext, useState } from "react";
-import { CARD_STATE, getInitialMemory, isPairCards } from "../../lib/memory";
+import { createContext, useContext, useState, useMemo } from "react";
+import {
+  CARD_STATE,
+  getInitialMemory,
+  isMemoryFinished,
+  isPairCards,
+} from "../../lib/memory";
 
 const MemoryContext = createContext();
 
@@ -16,9 +21,9 @@ export const MemoryContextProvider = ({ children }) => {
   const [cards, setCards] = useState(() => getInitialMemory());
   const [tryCounter, setTryCounter] = useState(0);
 
-  const onReturnedCard = (returnedCard) => {
-    console.log(returnedCard);
+  const isFinish = useMemo(() => isMemoryFinished(cards), [cards]);
 
+  const onReturnedCard = (returnedCard) => {
     /* On ne fait rien quand la carte est retourne */
     if (returnedCard.state !== CARD_STATE.HIDE) {
       return;
@@ -52,6 +57,7 @@ export const MemoryContextProvider = ({ children }) => {
 
     setTimeout(
       () => {
+        setTryCounter((counter) => counter + 1);
         setCards((current) => {
           return current.map((card) => {
             if (
@@ -64,15 +70,15 @@ export const MemoryContextProvider = ({ children }) => {
           });
         });
       },
-      isPair ? 100 : 1500
+      isPair ? 100 : 1000
     );
   };
 
   const reset = () => {
-    console.log("je reset");
     setCards(getInitialMemory());
+    setTryCounter(0);
   };
-  const values = { cards, tryCounter, onReturnedCard, reset };
+  const values = { cards, tryCounter, onReturnedCard, reset, isFinish };
 
   return (
     <MemoryContext.Provider value={values}> {children} </MemoryContext.Provider>

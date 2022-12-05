@@ -52,11 +52,13 @@ export const CARD_STATE = {
 };
 
 export const getInitialMemory = () => {
-  return shuffle([...animals, ...animals]).map((v, i) => ({
-    id: `card-${v}-${i}`,
-    emoji: v,
-    state: CARD_STATE.HIDE,
-  }));
+  return shuffle([...animals, ...animals]).map((v, i) => {
+    return {
+      id: `card-${v}-${i}`,
+      emoji: v,
+      state: CARD_STATE.HIDE,
+    };
+  });
 };
 
 export const GAME_STATUS = {
