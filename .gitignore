@@ -2,3 +2,4 @@ node_modules
 EXERCISES
 .DS_Store
 .next
+.env
